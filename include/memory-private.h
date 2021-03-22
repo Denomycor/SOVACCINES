@@ -16,14 +16,15 @@ typedef buffer_elem operation;
 
 
 struct circular_buffer { 	
-    
+    buffer_elem* elems[BUFFER_SIZE];
+    int read = 0;
+    int write = 0;
 };
 
 
 struct rnd_access_buffer { 		
     int flags[BUFFER_SIZE];
     buffer_elem* elems[BUFFER_SIZE];
-
 };
 
 

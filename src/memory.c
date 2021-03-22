@@ -54,3 +54,14 @@ void read_rnd_access_buffer(struct rnd_access_buffer* buffer, int buffer_size, s
         }
     }
 }
+
+void write_circular_buffer(struct circular_buffer* buffer, int buffer_size, struct operation* op){
+    buffer->elems[buffer->write] = op;
+    buffer->write = (buffer->write+1) % buffer_size;
+}
+
+
+void read_circular_buffer(struct circular_buffer* buffer, int buffer_size, struct operation* op){
+    op = buffer->elems[buffer->read];
+    buffer->read = (buffer->read+1) % buffer_size;
+}
