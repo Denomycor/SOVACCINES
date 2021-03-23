@@ -6,16 +6,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Returns -1 if the allocation fails
 void* create_shared_memory(char* name, int size){
     int desc = shm_open(name, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if(desc == -1 || ftruncate(desc, size)==-1){
         return (void*)-1;
     }
-    int*const handler = mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_SHARED, desc, 0);
-    if(handler == MAP_FAILED){
-        return (void*)-1;
-    }
-    return handler;
+    return mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_SHARED, desc, 0);
 }
 
 void destroy_shared_memory(char* name, void* ptr, int size){
@@ -25,8 +22,12 @@ void destroy_shared_memory(char* name, void* ptr, int size){
     }
 }
 
+// Return NULL if no memory was allocated
 void* create_dynamic_memory(int size){
     void* ptr = malloc(size);
+    if(ptr == NULL){
+        return 0;
+    }
     memset(ptr, 0, size);
     return ptr;
 }
