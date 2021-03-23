@@ -8,30 +8,19 @@
 #define BUFFER_SIZE 10
 #endif
 
-//Defenition of operation struct, so this file can see it
-struct operation; //memory.h
-
-//Defines the elements to be saved in the buffers
-typedef buffer_elem operation;
-
+typedef struct operation buffer_elem;
 
 struct circular_buffer { 	
     buffer_elem* elems[BUFFER_SIZE];
-    int read = 0;
-    int write = 0;
+    int read; //Is initialized to 0?
+    int write;//Is initialized to 0?
 };
 
 
 struct rnd_access_buffer { 		
-    int flags[BUFFER_SIZE];
+    int flags[BUFFER_SIZE]; //Is initialized to 0?
     buffer_elem* elems[BUFFER_SIZE];
 };
-
-
-void rnd_access_buffer_clear(struct rnd_access_buffer* o){
-    memset(o->flags, 0, sizeof(int)*BUFFER_SIZE);
-}
-
 
 
 #endif
