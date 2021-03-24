@@ -5,19 +5,27 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 //Returns -1 if the allocation fails
 void* create_shared_memory(char* name, int size){
     int desc = shm_open(name, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if(desc == -1 || ftruncate(desc, size)==-1){
-        return (void*)-1;
+        perror("Couldnt create shared memory");
+        exit(-1);
     }
-    return mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_SHARED, desc, 0);
+    void* holder = mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_SHARED, desc, 0);
+    if(holder == MAP_FAILED){
+        perror("Couldnt create shared memory-mmap failed");
+        exit(-1);
+    }
+    return holder;
 }
 
 void destroy_shared_memory(char* name, void* ptr, int size){
     int ret = munmap(ptr, size);
     if(ret == -1 || shm_unlink(name)==-1){
+        perror("Couldnt destroy shared memory");
         exit(-1);
     }
 }
@@ -26,7 +34,8 @@ void destroy_shared_memory(char* name, void* ptr, int size){
 void* create_dynamic_memory(int size){
     void* ptr = malloc(size);
     if(ptr == NULL){
-        return 0;
+        perror("Couldnt create dynamic memory");
+        exit(-1);
     }
     memset(ptr, 0, size);
     return ptr;
