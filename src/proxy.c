@@ -21,7 +21,7 @@ int execute_proxy(int proxy_id, struct communication_buffers* buffers, struct ma
 void proxy_receive_operation(struct operation* op, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  consume_begin(sems->cli_prx);
  
- if(data->terminate == 1){
+ if(*(data->terminate) == 1){
      return;
  }
  

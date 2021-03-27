@@ -10,7 +10,7 @@ int execute_client(int client_id, struct communication_buffers* buffers, struct 
     if((op->id) != -1 && *(data->terminate) == 0){
         client_process_operation(op,client_id,data->client_stats);
         client_send_operation(op,buffers,data,sems);
-
+    }
 
     client_receive_answer(op,buffers,data,sems);
     if((op->id) != -1 && *(data->terminate) == 0){

@@ -20,7 +20,7 @@ int execute_server(int server_id, struct communication_buffers* buffers, struct 
 void server_receive_operation(struct operation* op, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  consume_begin(sems->prx_srv);
 
- if(data->terminate == 1){
+ if(*(data->terminate) == 1){
      return;
  }
  
