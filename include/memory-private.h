@@ -3,22 +3,20 @@
 
 #include<stdlib.h>
 
-//Defines the buffer size for buffers
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 10
-#endif
-
 typedef struct operation buffer_elem;
+
+#define BUFFER_SIZE 10
+
 
 struct circular_buffer { 	
     buffer_elem* elems[BUFFER_SIZE];
-    int read; //Is initialized to 0?
-    int write;//Is initialized to 0?
+    int read;
+    int write;
 };
 
 
 struct rnd_access_buffer { 		
-    int flags[BUFFER_SIZE]; //Is initialized to 0?
+    int flags[BUFFER_SIZE]; 
     buffer_elem* elems[BUFFER_SIZE];
 };
 

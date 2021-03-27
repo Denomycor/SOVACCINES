@@ -2,7 +2,7 @@
 #include <semaphore.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <stdio.h>;
+#include <stdio.h>
 
 
 sem_t * semaphore_create(char* name, int value){
@@ -28,9 +28,9 @@ void semaphore_destroy(char* name, sem_t* semaphore){
 
 
 void semaphore_mutex_lock(sem_t* sem){
-    if(sem_wait(sem)!=0{
+    if(sem_wait(sem)!=0){
         perror("Couldnt lock semaphore");
-        error(-1);
+        exit(-1);
     }
 }
 
@@ -38,7 +38,7 @@ void semaphore_mutex_lock(sem_t* sem){
 void semaphore_mutex_unlock(sem_t* sem){
     if(sem_post(sem)!=0){
         perror("Couldnt unlock semaphore");
-        error(-1);
+        exit(-1);
     }
 }
 
