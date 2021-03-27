@@ -1,0 +1,67 @@
+#include "main.h"
+
+void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems) {
+    data->terminate* = 1;
+    wakeup_processes(data,sems);
+    wait_processes(data);
+    write_statistics(data);
+    destroy_semaphores(sems);
+    destroy_shared_memory_buffers(data,buffers);
+    destroy_dynamic_memory_buffers(data);
+}
+
+void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems) {
+
+    /*Clientes*/
+    for(int i = 0; i < data.n_clients;i++) {
+        launch_process(*(data.client_pids + i),0,buffers,data,sems);
+    }
+
+    /*Proxy*/
+    for(int i = 0; i < data.n_proxies;i++) {
+        launch_process(*(data.proxy_pids + i),1,buffers,data,sems);
+    }
+
+    /*Server*/
+    for(int i = 0; i < data.n_servers;i++) {
+        launch_process(*(data.server_pids + i),2,buffers,data,sems);
+    }
+   
+}
+
+void wait_processes(struct main_data* data) {
+    /*Clientes*/
+    for(int i = 0; i < data.n_clients;i++) {
+        wait_process(*(data.client_pids + i));
+    }
+
+    /*Proxy*/
+    for(int i = 0; i < data.n_proxies;i++) {
+        wait_process(*(data.proxy_pids + i));
+    }
+
+    /*Server*/
+    for(int i = 0; i < data.n_servers;i++) {
+        wait_process(*(data.server_pids + i));
+    }
+}
+
+void wakeup_processes(struct main_data* data, struct semaphores* sems) {
+    /*Main*/
+    produce_end(sems->main_cli);
+    
+    /*Clientes*/
+    for(int i = 0; i < data.n_clients;i++) {
+        produce_end(*(sems.cli_prx + i));
+    }
+
+    /*Proxy*/
+    for(int i = 0; i < data.n_proxies;i++) {
+        produce_end(*(sems.prx_srv + i));
+    }
+
+    /*Server*/
+    for(int i = 0; i < data.n_servers;i++) {
+        produce_end(*(sems.srv_cli + i));
+    }
+}
