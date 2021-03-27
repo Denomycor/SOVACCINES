@@ -15,18 +15,12 @@ int launch_process(int process_id, int process_code, struct communication_buffer
         switch (process_code)
         {
         case '0':
-            data.n_clients++;
-            data.*client_pids = &process_id;
             exit(execute_client(data.n_clients,buffers,data,sems));
             break;
         case '1':
-            data.n_proxies++;
-            data.*proxy_pids = &process_id;
             exit(execute_proxy(data.n_proxies,buffers,data,sems));
             break;
         case '2':
-            data.n_servers++;
-            data.*server_pids = &process_id;
             exit(execute_server(data.n_servers,buffers,data,sems));
             break;
         default:
@@ -34,7 +28,7 @@ int launch_process(int process_id, int process_code, struct communication_buffer
         }
     }
     else {
-        exit(getpid());
+        return pid;
     }
 
 }
@@ -46,7 +40,7 @@ int wait_process(int process_id) {
         return status_process;
     }
     else {
-        perror("Processo acabou de maneira inesperada");
+        perror("Process ended bad");
         exit(-1);
     }
 }
