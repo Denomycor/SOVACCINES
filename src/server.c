@@ -6,7 +6,7 @@ int execute_server(int server_id, struct communication_buffers* buffers, struct 
     struct operation* op;
     server_receive_operation(op,buffers,data,sems);
 
-    if((op->id) =! -1 && *(data->terminate) == 0){
+    if((op->id) != -1 && *(data->terminate) == 0){
         server_process_operation(op,server_id,data->server_stats);
         server_send_answer(op,buffers,data,sems);
     }
@@ -19,6 +19,11 @@ int execute_server(int server_id, struct communication_buffers* buffers, struct 
 
 void server_receive_operation(struct operation* op, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  consume_begin(sems->prx_srv);
+
+ if(data->terminate == 1){
+     return;
+ }
+ 
  read_rnd_access_buffer(buffers->prx_srv,data->buffers_size,op);
  consume_end(sems->prx_srv);
 }
