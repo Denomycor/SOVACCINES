@@ -24,6 +24,16 @@ void create_dynamic_memory_buffers(struct main_data* data) {
     create_dynamic_memory(size);
 }
 
+void create_shared_memory_buffers(struct main_data* data, struct communication_buffers* buffers) {
+    int size = 1 + /*int *terminated*/
+                sizeof(data->results) + sizeof(buffers->main_cli) + sizeof(buffers->cli_prx) +
+                sizeof(buffers->srv_cli) + sizeof(buffers->prx_srv);
+    
+    char name[] = "shared_memory";
+    create_shared_memory(name,size);
+
+}
+
 void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems) {
 
     /*Clientes*/
