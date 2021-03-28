@@ -147,10 +147,11 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
 //REVER ESTA FUN
 void wakeup_processes(struct main_data* data, struct semaphores* sems) {
     /*Main*/
-    produce_end(sems->main_cli);
+    
     
     /*Clientes*/
     for(int i = 0; i < data->n_clients;i++) {
+        produce_end(sems->main_cli);
         produce_end(sems->cli_prx);
     }
 
