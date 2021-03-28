@@ -8,16 +8,6 @@ void main_args(int argc, char* argv[], struct main_data* data) {
     data->n_servers = argv[5];
 }
 
-void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems) {
-    data->terminate* = 1;
-    wakeup_processes(data,sems);
-    wait_processes(data);
-    write_statistics(data);
-    destroy_semaphores(sems);
-    destroy_shared_memory_buffers(data,buffers);
-    destroy_dynamic_memory_buffers(data);
-}
-
 void create_dynamic_memory_buffers(struct main_data* data) {
     int size = data->n_clients + data->client_stats + data->n_proxies + 
                 data->proxy_stats + data->n_servers + data->server_stats;
@@ -53,6 +43,34 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
    
 }
 
+void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
+    char interacao[];
+    scanf(%s,interacao);
+
+    switch(interacao) {
+        case 'op':
+            create_request(sizeof(data->results),buffers,data,sems);
+        break;
+
+        case 'read':
+            read_answer(data,sems);
+        break;
+
+        case 'stop':
+            stop_execution(data,buffers,sems);
+        break;
+
+        case 'help':
+            printf("The op option creates a new operation/n");
+            printf("The read option checks the status of the operation/n");
+            printf("The stop option ends the program");
+        break;
+
+        default:
+        perror("There is no interaction with that name");
+    }
+}
+
 void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){ 
  if(*op_counter < *(data->max_ops)){
      op new_op;
@@ -67,21 +85,14 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
  }
 }
 
-void wait_processes(struct main_data* data) {
-    /*Clientes*/
-    for(int i = 0; i < data.n_clients;i++) {
-        wait_process(*(data.client_pids + i));
-    }
-
-    /*Proxy*/
-    for(int i = 0; i < data.n_proxies;i++) {
-        wait_process(*(data.proxy_pids + i));
-    }
-
-    /*Server*/
-    for(int i = 0; i < data.n_servers;i++) {
-        wait_process(*(data.server_pids + i));
-    }
+void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems) {
+    data->terminate* = 1;
+    wakeup_processes(data,sems);
+    wait_processes(data);
+    write_statistics(data);
+    destroy_semaphores(sems);
+    destroy_shared_memory_buffers(data,buffers);
+    destroy_dynamic_memory_buffers(data);
 }
 
 void wakeup_processes(struct main_data* data, struct semaphores* sems) {
@@ -103,6 +114,24 @@ void wakeup_processes(struct main_data* data, struct semaphores* sems) {
         produce_end(*(sems.srv_cli + i));
     }
 }
+
+void wait_processes(struct main_data* data) {
+    /*Clientes*/
+    for(int i = 0; i < data.n_clients;i++) {
+        wait_process(*(data.client_pids + i));
+    }
+
+    /*Proxy*/
+    for(int i = 0; i < data.n_proxies;i++) {
+        wait_process(*(data.proxy_pids + i));
+    }
+
+    /*Server*/
+    for(int i = 0; i < data.n_servers;i++) {
+        wait_process(*(data.server_pids + i));
+    }
+}
+
 
 void write_statistics(struct main_data* data){
  printf("Operações processadas por cada cliente: %d \n",*(data->client_stats));
