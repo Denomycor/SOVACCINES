@@ -28,7 +28,7 @@ void client_get_operation(struct operation* op, struct communication_buffers* bu
  if(*(data->terminate) == 1){
         return;
  }
- read_rnd_access_buffer(buffers->main_cli,BUFFER_SIZE,op);
+ read_rnd_access_buffer(buffers->main_cli,data->buffers_size,op);
  consume_end(sems->main_cli);
 }
 

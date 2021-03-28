@@ -37,6 +37,6 @@ void proxy_process_operation(struct operation* op, int proxy_id, int* counter){
 
 void proxy_forward_operation(struct operation* op, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  produce_begin(sems->prx_srv);
- write_rnd_access_buffer(buffers->prx_srv,BUFFER_SIZE,op);
+ write_rnd_access_buffer(buffers->prx_srv,data->buffers_size,op);
  produce_end(sems->prx_srv);
 }
