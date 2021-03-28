@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+ #if 1
+    #define log(x) printf(x)
+    #endif
+
 void main_args(int argc, char* argv[], struct main_data* data) {
     data->max_ops = atoi(argv[1]);
     data->buffers_size = atoi(argv[2]);
@@ -79,23 +84,29 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 }
 
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
-    char* interacao;
-    scanf("%s",interacao);
-    static int nr_op=0;
 
-    if(strcmp(interacao, "op")){
-        create_request(&nr_op,buffers,data,sems);
-    }else if(strcmp(interacao, "read")) {
-        read_answer(data,sems);
-    }else if(strcmp(interacao, "stop")){
-        stop_execution(data,buffers,sems);
-    }else if(strcmp(interacao, "help")){
-        printf("The op option creates a new operation/n");
-        printf("The read option checks the status of the operation/n");
-        printf("The stop option ends the program/n");
-    }else{
-        perror("There is no interaction with that name/n");
+
+    int nr_op=0;
+    while (1){
+        char* interacao;
+        scanf("%s",interacao);
+
+        if(strcmp(interacao, "op")==0){
+            create_request(&nr_op,buffers,data,sems);
+        }else if(strcmp(interacao, "read")==0) {
+            read_answer(data,sems);
+        }else if(strcmp(interacao, "stop")==0){
+            stop_execution(data,buffers,sems);
+            return;
+        }else if(strcmp(interacao, "help")==0){
+            printf("The op option creates a new operation\n");
+            printf("The read option checks the status of the operation\n");
+            printf("The stop option ends the program\n");
+        }else{
+            perror("There is no interaction with that name\n");
+        }
     }
+    
 }
 
 void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){ 
@@ -139,6 +150,7 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
     *(data->terminate) = 1;
     wakeup_processes(data,sems);
     wait_processes(data);
+    log("ajnfsçd\n");
     write_statistics(data);
     destroy_semaphores(sems);
     destroy_shared_memory_buffers(data,buffers);
