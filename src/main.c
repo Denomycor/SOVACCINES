@@ -1,5 +1,13 @@
 #include "main.h"
 
+void main_args(int argc, char* argv[], struct main_data* data) {
+    data->max_ops = argv[1];
+    data->buffers_size = argv[2];
+    data->n_clients = argv[3];
+    data->n_proxies = argv[4];
+    data->n_servers = argv[5];
+}
+
 void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems) {
     data->terminate* = 1;
     wakeup_processes(data,sems);
@@ -8,6 +16,12 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
     destroy_semaphores(sems);
     destroy_shared_memory_buffers(data,buffers);
     destroy_dynamic_memory_buffers(data);
+}
+
+void create_dynamic_memory_buffers(struct main_data* data) {
+    int size = data->n_clients + data->client_stats + data->n_proxies + 
+                data->proxy_stats + data->n_servers + data->server_stats;
+    create_dynamic_memory(size);
 }
 
 void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems) {
