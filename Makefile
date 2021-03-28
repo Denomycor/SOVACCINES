@@ -21,3 +21,6 @@ server.o: $(SRCDIR)/server.c $(HEADERDIR)/server.h
 
 process.o: $(SRCDIR)/process.c $(HEADERDIR)/process.h $(HEADERDIR)/server.h $(HEADERDIR)/proxy.h $(HEADERDIR)/client.h
 	$(CC) -c $(SRCDIR)/process.c -o $(OBJDIR)/process.o
+
+main.o: $(SRCDIR)/main.c $(HEADERDIR)/main.h $(HEADERDIR)/memory.h
+	$(CC) -c $(SRCDIR)/main.c -o $(OBJDIR)/main.o

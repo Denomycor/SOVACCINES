@@ -1,11 +1,14 @@
 #include "../include/main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void main_args(int argc, char* argv[], struct main_data* data) {
-    data->max_ops = argv[1];
-    data->buffers_size = argv[2];
-    data->n_clients = argv[3];
-    data->n_proxies = argv[4];
-    data->n_servers = argv[5];
+    data->max_ops = atoi(argv[1]);
+    data->buffers_size = atoi(argv[2]);
+    data->n_clients = atoi(argv[3]);
+    data->n_proxies = atoi(argv[4]);
+    data->n_servers = atoi(argv[5]);
 }
 
 void create_dynamic_memory_buffers(struct main_data* data) {
@@ -27,47 +30,47 @@ void create_shared_memory_buffers(struct main_data* data, struct communication_b
     buffers->srv_cli = create_shared_memory(STR_SHM_SRV_CLI_PTR, sizeof(struct circular_buffer));
     
     buffers->main_cli->elems = create_shared_memory(STR_SHM_MAIN_CLI_BUFFER, data->buffers_size*sizeof(struct operation)+data->buffers_size*sizeof(int));
-    buffers->main_cli->flags = buffers->main_cli->elems + data->buffers_size*sizeof(struct operation);
+    buffers->main_cli->flags = (void*)(buffers->main_cli->elems + data->buffers_size);
 
     buffers->cli_prx->elems = create_shared_memory(STR_SHM_CLI_PRX_BUFFER, data->buffers_size*sizeof(struct operation));
     
     buffers->prx_srv->elems = create_shared_memory(STR_SHM_PRX_SRV_BUFFER, data->buffers_size*sizeof(struct operation)+data->buffers_size*sizeof(int));
-    buffers->prx_srv->flags = buffers->prx_srv->elems + data->buffers_size*sizeof(struct operation);
+    buffers->prx_srv->flags = (void*)(buffers->prx_srv->elems + data->buffers_size);
 
     buffers->srv_cli->elems = create_shared_memory(STR_SHM_SRV_CLI_BUFFER, data->buffers_size*sizeof(struct operation));
 }
 
 void create_semaphores(struct main_data* data, struct semaphores* sems){
- sems->main_cli->ful = semaphore_create("sem_main_cli_full",0);
- sems->main_cli->empty = semaphore_create("sem_main_cli_empty",*(data->buffers_size));
+ sems->main_cli->full = semaphore_create("sem_main_cli_full",0);
+ sems->main_cli->empty = semaphore_create("sem_main_cli_empty",data->buffers_size);
  sems->main_cli->mutex = semaphore_create("sem_main_cli_mutex",1);
  sems->cli_prx->full = semaphore_create("sem_cli_prx_full",0);
- sems->cli_prx->empty = semaphore_create("sem_cli_prx_empty",*(data->buffers_size));
+ sems->cli_prx->empty = semaphore_create("sem_cli_prx_empty",data->buffers_size);
  sems->cli_prx->mutex = semaphore_create("sem_cli_prx_mutex",1);
  sems->prx_srv->full = semaphore_create("sem_prx_srv_full",0);
- sems->prx_srv->empty = semaphore_create("sem_prx_srv_empty",*(data->buffers_size));
+ sems->prx_srv->empty = semaphore_create("sem_prx_srv_empty",data->buffers_size);
  sems->prx_srv->mutex = semaphore_create("sem_prx_srv_mutex",1);
  sems->srv_cli->full = semaphore_create("sem_srv_cli_full",0);
- sems->srv_cli->empty = semaphore_create("sem_srv_cli_empty",*(data->buffers_size));
+ sems->srv_cli->empty = semaphore_create("sem_srv_cli_empty",data->buffers_size);
  sems->srv_cli->mutex = semaphore_create("sem_srv_cli_mutex",1);
- sems->results_mutex = semaphore_create("sem_results_mutex",1)
+ sems->results_mutex = semaphore_create("sem_results_mutex",1);
 }
 
 void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems) {
 
     /*Clientes*/
-    for(int i = 0; i < data.n_clients;i++) {
-        clients_pids[i] = launch_process(*(data.client_pids + i),0,buffers,data,sems);
+    for(int i = 0; i < data->n_clients;i++) {
+        data->client_pids[i] = launch_process(*(data->client_pids + i),0,buffers,data,sems);
     }
 
     /*Proxy*/
-    for(int i = 0; i < data.n_proxies;i++) {
-        proxy_pids[i] = launch_process(*(data.proxy_pids + i),1,buffers,data,sems);
+    for(int i = 0; i < data->n_proxies;i++) {
+        data->proxy_pids[i] = launch_process(*(data->proxy_pids + i),1,buffers,data,sems);
     }
 
     /*Server*/
-    for(int i = 0; i < data.n_servers;i++) {
-        server_pids[i] = launch_process(*(data.server_pids + i),2,buffers,data,sems);
+    for(int i = 0; i < data->n_servers;i++) {
+        data->server_pids[i] = launch_process(*(data->server_pids + i),2,buffers,data,sems);
     }
    
 }
@@ -76,40 +79,32 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
     char* interacao;
     scanf("%s",interacao);
 
-    switch(*interacao) {
-        case 'op':
-            create_request(error,buffers,data,sems);
-        break;
+    if(strcmp(interacao, "op")){
 
-        case 'read':
-            read_answer(data,sems);
-        break;
-
-        case 'stop':
-            stop_execution(data,buffers,sems);
-        break;
-
-        case 'help':
-            printf("The op option creates a new operation/n");
-            printf("The read option checks the status of the operation/n");
-            printf("The stop option ends the program/n");
-        break;
-
-        default:
-            perror("There is no interaction with that name/n");
+        create_request(*(data->proxy_stats),buffers,data,sems);
+    }else if(strcmp(interacao, "read")) {
+        read_answer(data,sems);
+    }else if(strcmp(interacao, "stop")){
+        stop_execution(data,buffers,sems);
+    }else if(strcmp(interacao, "help")){
+        printf("The op option creates a new operation/n");
+        printf("The read option checks the status of the operation/n");
+        printf("The stop option ends the program/n");
+    }else{
+        perror("There is no interaction with that name/n");
     }
 }
 
 void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){ 
- if(*op_counter < *(data->max_ops)){
+ if(*op_counter < data->max_ops){
      struct operation new_op;
      new_op.id =  *op_counter;
      produce_begin(sems->main_cli);
 
-     write_rnd_acess_buffer(buffers->main_cli,*(data->buffers_size),new_op);
+     write_rnd_acess_buffer(buffers->main_cli,data->buffers_size,new_op);
 
-     produce_end(sems_main_cli);
-     printf("Operation ID: %d \n", *(new_op->id));
+     produce_end(sems->main_cli);
+     printf("Operation ID: %d \n", new_op.id);
      (*op_counter)++;
    }
 }
@@ -120,14 +115,14 @@ void read_answer(struct main_data* data, struct semaphores* sems){
     semaphore_mutex_lock(sems->results_mutex);
     for(int i=0; i<data->max_ops; i++){
         struct operation* holder = data->results+i;
-        if(holder->id == if){
+        if(holder->id == id){
             printf("Status da operacao: %d\n", holder->status);
             printf("Processo Cliente: %d\n", holder->client);
             printf("Processo Proxy: %d\n", holder->proxy);
             printf("Processo Servidor: %d\n", holder->server);
             
             semaphore_mutex_unlock(sems->results_mutex);
-            return
+            return;
         }
     }
 
@@ -152,35 +147,35 @@ void wakeup_processes(struct main_data* data, struct semaphores* sems) {
     produce_end(sems->main_cli);
     
     /*Clientes*/
-    for(int i = 0; i < data.n_clients;i++) {
-        produce_end(sems.cli_prx[i]);
+    for(int i = 0; i < data->n_clients;i++) {
+        produce_end(sems->cli_prx[i]);
     }
 
     /*Proxy*/
-    for(int i = 0; i < data.n_proxies;i++) {
-        produce_end(sems.prx_srv[i]);
+    for(int i = 0; i < data->n_proxies;i++) {
+        produce_end(sems->prx_srv[i]);
     }
 
     /*Server*/
-    for(int i = 0; i < data.n_servers;i++) {
-        produce_end(sems.srv_cli[i]);
+    for(int i = 0; i < data->n_servers;i++) {
+        produce_end(sems->srv_cli[i]);
     }
 }
 
 void wait_processes(struct main_data* data) {
     /*Clientes*/
-    for(int i = 0; i < data.n_clients;i++) {
-        wait_process(data.client_pids[i]);
+    for(int i = 0; i < data->n_clients;i++) {
+        wait_processes(data->client_pids[i]);
     }
 
     /*Proxy*/
-    for(int i = 0; i < data.n_proxies;i++) {
-        wait_process(data.proxy_pids[i]));
+    for(int i = 0; i < data->n_proxies;i++) {
+        wait_processes(data->proxy_pids[i]);
     }
 
     /*Server*/
-    for(int i = 0; i < data.n_servers;i++) {
-        wait_process(data.server_pids[i]);
+    for(int i = 0; i < data->n_servers;i++) {
+        wait_processes(data->server_pids[i]);
     }
 }
 
@@ -217,17 +212,17 @@ void destroy_shared_memory_buffers(struct main_data* data, struct communication_
 }
 
 void destroy_semaphores(struct semaphores* sems){
- semaphore_destroy(sems->main_cli->full);
- semaphore_destroy(sems->main_cli->empty);
- semaphore_destroy(sems->main_cli->mutex);
- semaphore_destroy(sems->cli_prx->full);
- semaphore_destroy(sems->cli_prx->empty);
- semaphore_destroy(sems->cli_prx->mutex);
- semaphore_destroy(sems->prx_srv->full);
- semaphore_destroy(sems->prx_srv->empty);
- semaphore_destroy(sems->prx_srv->mutex);
- semaphore_destroy(sems->srv_cli->full);
- semaphore_destroy(sems->srv_cli->empty);
- semaphore_destroy(sems->srv_cli->mutex);
- semaphore_destroy(sems->results_mutex);
+ semaphore_destroy(STR_SEM_MAIN_CLI_FULL ,sems->main_cli->full);
+ semaphore_destroy(STR_SEM_MAIN_CLI_EMPTY, sems->main_cli->empty);
+ semaphore_destroy(STR_SEM_MAIN_CLI_MUTEX, sems->main_cli->mutex);
+ semaphore_destroy(STR_SEM_CLI_PRX_FULL, sems->cli_prx->full);
+ semaphore_destroy(STR_SEM_CLI_PRX_EMPTY, sems->cli_prx->empty);
+ semaphore_destroy(STR_SEM_CLI_PRX_MUTEX, sems->cli_prx->mutex);
+ semaphore_destroy(STR_SEM_PRX_SRV_FULL, sems->prx_srv->full);
+ semaphore_destroy(STR_SEM_PRX_SRV_EMPTY, sems->prx_srv->empty);
+ semaphore_destroy(STR_SEM_PRX_SRV_MUTEX, sems->prx_srv->mutex);
+ semaphore_destroy(STR_SEM_SRV_CLI_FULL, sems->srv_cli->full);
+ semaphore_destroy(STR_SEM_SRV_CLI_EMPTY, sems->srv_cli->empty);
+ semaphore_destroy(STR_SEM_SRV_CLI_MUTEX, sems->srv_cli->mutex);
+ semaphore_destroy(STR_SEM_RESULTS_MUTEX, sems->results_mutex);
 }
