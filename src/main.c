@@ -85,3 +85,36 @@ void write_statistics(struct main_data* data){
  printf("Operações processadas por cada proxy: %d \n",(data->proxy_stats));
  printf("Operações processadas por cada servidor: %d \n",(data->server_stats));
 }
+
+void destroy_dynamic_memory_buffers(struct main_data* data){
+ destroy_dynamic_memory(data->client_pids);
+ destroy_dynamic_memory(data->proxy_pids);
+ destroy_dynamic_memory(data->server_pids);
+ destroy_dynamic_memory(data->client_stats);
+ destroy_dynamic_memory(data->proxy_stats);
+ destroy_dynamic_memory(data->server_stats);
+
+}
+
+void destroy_shared_memory_buffers(struct main_data* data, struct communication_buffers* buffers){
+ destroy_shared_memory("SHM_MAIN_CLI_BUFFER",buffers->main_cli,data->buffers_size);
+ destroy_shared_memory("SHM_CLI_PRX_BUFFER",buffers->cli_prx,data->buffers_size);
+ destroy_shared_memory("SHM_PRX_SRV_BUFFER",buffers->prx_srv,data->buffers_size);
+ destroy_shared_memory("SHM_SRV_CLI_BUFFER",buffers->srv_cli,data->buffers_size);
+
+}
+
+void destroy_semaphores(struct semaphores* sems){
+ semaphore_destroy(sems->main_cli->full);
+ semaphore_destroy(sems->main_cli->empty);
+ semaphore_destroy(sems->main_cli->mutex);
+ semaphore_destroy(sems->cli_prx->full);
+ semaphore_destroy(sems->cli_prx->empty);
+ semaphore_destroy(sems->cli_prx->mutex);
+ semaphore_destroy(sems->prx_srv->full);
+ semaphore_destroy(sems->prx_srv->empty);
+ semaphore_destroy(sems->prx_srv->mutex);
+ semaphore_destroy(sems->srv_cli->full);
+ semaphore_destroy(sems->srv_cli->empty);
+ semaphore_destroy(sems->srv_cli->mutex);
+}
