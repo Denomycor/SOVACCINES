@@ -1,3 +1,10 @@
+/**
+Grupo054
+Afonso Esteves, fc54394
+Diogo Fernandes, fc54458
+Miguel Santos, fc54461
+*/
+
 #include "../include/server.h"
 
 int execute_server(int server_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
