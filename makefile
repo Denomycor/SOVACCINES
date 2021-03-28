@@ -1,27 +1,30 @@
-FLAGS = -w -lm -pthread -lrt -lpthread
+
+
+
+
+
+FLAGS = -w -lm -lrt -lpthread -pthread
 CC = gcc
 OBJDIR = obj
-OBJFILES = main.o client.o proxy.o server.o synchronization.o  process.o  memory.o
-HEADERDIR = include
+OBJFILES = main.o proxy.o  client.o server.o  process.o  memory.o  synchronization.o
+HEADERDIR = include 
 SRCDIRDIR = src
 BINDIR = bin
-
-memory.o = ./$(HEASERDIR)/memory-private.h ./$(HEASERDIR)/memory.h
-synchronization.o = ./$(HEASERDIR)/synchronization.h
-server.o = ./$(HEASERDIR)/main.h ./$(HEASERDIR)/memory.h ./$(HEASERDIR)/server.h ./$(HEASERDIR)/synchronization.h
-main.o =  ./$(HEASERDIR)/main.h ./$(HEASERDIR)/client.h ./$(HEASERDIR)/memory.h ./$(HEASERDIR)/server.h ./$(HEASERDIR)/proxy.h ./$(HEASERDIR)/process.h ./$(HEASERDIR)/synchronization.h ./$(HEASERDIR)/memory-private.h
-client.o = ./$(HEASERDIR)/client.h ./$(HEASERDIR)/main.h ./$(HEASERDIR)/memory.h ./$(HEASERDIR)/synchronization.h
-proxy.o = ./$(HEASERDIR)/main.h ./$(HEASERDIR)/proxy.h ./$(HEASERDIR)/memory.h ./$(HEASERDIR)/synchronization.h
-process.o = ./$(HEASERDIR)/main.h ./$(HEASERDIR)/client.h ./$(HEASERDIR)/memory.h ./$(HEASERDIR)/server.h ./$(HEASERDIR)/proxy.h ./$(HEASERDIR)/synchronization.h
-
+proxy.o = $(HEADERDIR)/main.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/proxy.h $(HEADERDIR)/memory.h
+memory.o = $(HEADERDIR)/memory-private.h $(HEADERDIR)/memory.h
+process.o = $(HEADERDIR)/client.h $(HEADERDIR)/main.h $(HEADERDIR)/memory.h $(HEADERDIR)/proxy.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/server.h 
+main.o =  $(HEADERDIR)/main.h $(HEADERDIR)/client.h $(HEADERDIR)/server.h $(HEADERDIR)/proxy.h $(HEADERDIR)/process.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h $(HEADERDIR)/memory-private.h
+synchronization.o = $(HEADERDIR)/synchronization.h
+client.o = $(HEADERDIR)/client.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/main.h $(HEADERDIR)/memory.h
+server.o = $(HEADERDIR)/main.h $(HEADERDIR)/server.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h
 
 
 sovaccines: $(OBJFILES)
 	$(CC) $(addprefix $(OBJDIR)/,$(OBJFILES))  $(FLAGS) -g -o $(addprefix ./bin/,$@)
 
-%.o: ./src/%.c $($@)
+%.o: src/%.c $($@)
 	$(CC) -I include -o $(addprefix obj/,$@) -g -c $<
 
 clean:
 	rm $(addprefix $(OBJDIR)/,$(OBJFILES))
-	rm ./bin/sovaccines
+	rm $(BINDIR)/sovaccines
