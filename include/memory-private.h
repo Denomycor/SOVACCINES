@@ -5,19 +5,20 @@
 
 typedef struct operation buffer_elem;
 
-#define BUFFER_SIZE 10
-
+struct pair{
+    int flag;
+    buffer_elem elem;
+};
 
 struct circular_buffer { 	
-    buffer_elem* elems[BUFFER_SIZE];
+    buffer_elem* elems;
     int read;
     int write;
 };
 
 
 struct rnd_access_buffer { 		
-    int flags[BUFFER_SIZE]; 
-    buffer_elem* elems[BUFFER_SIZE];
+    struct pair* buffer;
 };
 
 

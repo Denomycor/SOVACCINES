@@ -56,9 +56,9 @@ void destroy_dynamic_memory(void* ptr){
 
 void write_rnd_access_buffer(struct rnd_access_buffer* buffer, int buffer_size, struct operation* op){
     for(int i=0; i<buffer_size; i++){
-        if(buffer->flags[i] == 0){
-            buffer->elems[i] = op;  
-            buffer->flags[i] = 1;
+        if(buffer->buffer[i].flag == 0){
+            buffer->buffer[i].elem = *op;  
+            buffer->buffer[i].flag = 1;
             return;
         }
     }
@@ -66,21 +66,21 @@ void write_rnd_access_buffer(struct rnd_access_buffer* buffer, int buffer_size, 
 
 void read_rnd_access_buffer(struct rnd_access_buffer* buffer, int buffer_size, struct operation* op){
     for(int i=0; i<buffer_size; i++){
-        if(buffer->flags[i] == 1){
-            op = buffer->elems[i];
-            buffer->flags[i] = 0;
+        if(buffer->buffer[i].flag == 1){
+            op = &(buffer->buffer[i].elem);  
+            buffer->buffer[i].flag = 0;
             return;
         }
     }
 }
 
 void write_circular_buffer(struct circular_buffer* buffer, int buffer_size, struct operation* op){
-    buffer->elems[buffer->write] = op;
+    buffer->elems[buffer->write] = *op;
     buffer->write = (buffer->write+1) % buffer_size;
 }
 
 
 void read_circular_buffer(struct circular_buffer* buffer, int buffer_size, struct operation* op){
-    op = buffer->elems[buffer->read];
+    op = buffer->elems + buffer->read;
     buffer->read = (buffer->read+1) % buffer_size;
 }
