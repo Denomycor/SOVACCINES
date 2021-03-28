@@ -35,10 +35,10 @@ int launch_process(int process_id, int process_code, struct communication_buffer
 }
 
 int wait_process(int process_id){
- int* status;   
- waitpid(process_id,status,0);
- if (WIFEXITED(*status)){
-     return WEXITSTATUS(*status);
+ int status;   
+ waitpid(process_id,&status,0);
+ if (WIFEXITED(status)){
+     return WEXITSTATUS(status);
  }
 }
 

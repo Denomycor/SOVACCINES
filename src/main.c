@@ -10,7 +10,9 @@ void main_args(int argc, char* argv[], struct main_data* data) {
     data->n_clients = atoi(argv[3]);
     data->n_proxies = atoi(argv[4]);
     data->n_servers = atoi(argv[5]);
+
 }
+
 
 void create_dynamic_memory_buffers(struct main_data* data) {
     data->client_pids = create_dynamic_memory(data->n_clients*sizeof(int));
@@ -79,11 +81,10 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     char* interacao;
     scanf("%s",interacao);
-    int nr_op=0; //DUVIDO Q SEJA ASSIM
+    static int nr_op=0;
 
     if(strcmp(interacao, "op")){
-
-        create_request(nr_op,buffers,data,sems);
+        create_request(&nr_op,buffers,data,sems);
     }else if(strcmp(interacao, "read")) {
         read_answer(data,sems);
     }else if(strcmp(interacao, "stop")){
@@ -144,7 +145,7 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
     destroy_dynamic_memory_buffers(data);
 }
 
-//REVER ESTA FUN
+
 void wakeup_processes(struct main_data* data, struct semaphores* sems) {
     /*Main*/
     
@@ -229,4 +230,39 @@ void destroy_semaphores(struct semaphores* sems){
  semaphore_destroy(STR_SEM_SRV_CLI_EMPTY, sems->srv_cli->empty);
  semaphore_destroy(STR_SEM_SRV_CLI_MUTEX, sems->srv_cli->mutex);
  semaphore_destroy(STR_SEM_RESULTS_MUTEX, sems->results_mutex);
+}
+
+
+int main(int argc, char** argv){
+    //init data structures
+    struct main_data* data = create_dynamic_memory(sizeof(struct main_data));
+    struct communication_buffers* buffers = create_dynamic_memory(sizeof(struct communication_buffers));
+    buffers->main_cli = create_dynamic_memory(sizeof(struct rnd_access_buffer));
+    buffers->cli_prx = create_dynamic_memory(sizeof(struct circular_buffer));
+    buffers->prx_srv = create_dynamic_memory(sizeof(struct rnd_access_buffer));
+    buffers->srv_cli = create_dynamic_memory(sizeof(struct circular_buffer));
+    struct semaphores* sems = create_dynamic_memory(sizeof(struct semaphores));
+    sems->main_cli = create_dynamic_memory(sizeof(struct prodcons));
+    sems->cli_prx = create_dynamic_memory(sizeof(struct prodcons));
+    sems->prx_srv = create_dynamic_memory(sizeof(struct prodcons));
+    sems->srv_cli = create_dynamic_memory(sizeof(struct prodcons));
+    //execute main code
+    main_args(argc, argv, data);
+    create_dynamic_memory_buffers(data);
+    create_shared_memory_buffers(data, buffers);
+    create_semaphores(data, sems);
+    launch_processes(buffers, data, sems);
+    user_interaction(buffers, data, sems);
+    //release final memory
+    destroy_dynamic_memory(data);
+    destroy_dynamic_memory(buffers->main_cli);
+    destroy_dynamic_memory(buffers->cli_prx);
+    destroy_dynamic_memory(buffers->prx_srv);
+    destroy_dynamic_memory(buffers->srv_cli);
+    destroy_dynamic_memory(buffers);
+    destroy_dynamic_memory(sems->main_cli);
+    destroy_dynamic_memory(sems->cli_prx);
+    destroy_dynamic_memory(sems->prx_srv);
+    destroy_dynamic_memory(sems->srv_cli);
+    destroy_dynamic_memory(sems);
 }
