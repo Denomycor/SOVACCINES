@@ -53,6 +53,20 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
    
 }
 
+void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){ 
+ if(*op_counter < *(data->max_ops)){
+     op new_op;
+     new_op.id =  *op_counter;
+    produce_begin(sems->main_cli);
+
+    read_rnd_acess_buffer(buffers->main_cli,*(data->buffers_size),new_op);
+
+    produce_end(sems_main_cli);
+    printf("Operation ID: %d \n", *(new_op->id));
+    (*op_counter)++;
+ }
+}
+
 void wait_processes(struct main_data* data) {
     /*Clientes*/
     for(int i = 0; i < data.n_clients;i++) {
