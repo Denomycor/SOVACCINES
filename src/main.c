@@ -63,11 +63,11 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
         case 'help':
             printf("The op option creates a new operation/n");
             printf("The read option checks the status of the operation/n");
-            printf("The stop option ends the program");
+            printf("The stop option ends the program/n");
         break;
 
         default:
-        perror("There is no interaction with that name");
+        perror("There is no interaction with that name/n");
     }
 }
 
