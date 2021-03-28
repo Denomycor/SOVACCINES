@@ -71,7 +71,7 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 
     /*Clientes*/
     for(int i = 0; i < data->n_clients;i++) {
-        data->client_pids[i] = launch_process(*(data->client_pids + i),0,buffers,data,sems);
+        data->client_pids[i] = launch_process(*(data->client_pids + i),0,buffers,data,sems); 
     }
 
     /*Proxy*/
