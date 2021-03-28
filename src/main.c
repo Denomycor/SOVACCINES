@@ -65,3 +65,9 @@ void wakeup_processes(struct main_data* data, struct semaphores* sems) {
         produce_end(*(sems.srv_cli + i));
     }
 }
+
+void write_statistics(struct main_data* data){
+ printf("Operações processadas por cada cliente: %d \n",*(data->client_stats));
+ printf("Operações processadas por cada proxy: %d \n",(data->proxy_stats));
+ printf("Operações processadas por cada servidor: %d \n",(data->server_stats));
+}
