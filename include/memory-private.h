@@ -1,24 +1,21 @@
 #ifndef MEMORY_PRIVATE_H_GUARD
 #define MEMORY_PRIVATE_H_GUARD
 
-#include<stdlib.h>
+#include "memory.h"
 
-typedef struct operation buffer_elem;
-
-struct pair{
-    int flag;
-    buffer_elem elem;
-};
 
 struct circular_buffer { 	
-    buffer_elem* elems;
+    struct operation* elems;
     int read;
     int write;
 };
 
 
+
+
 struct rnd_access_buffer { 		
-    struct pair* buffer;
+    struct operation* elems;
+    int* flags;
 };
 
 

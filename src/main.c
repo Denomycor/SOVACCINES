@@ -25,9 +25,15 @@ void create_shared_memory_buffers(struct main_data* data, struct communication_b
     buffers->cli_prx = create_shared_memory(STR_SHM_CLI_PRX_PTR, sizeof(struct circular_buffer));
     buffers->prx_srv = create_shared_memory(STR_SHM_PRX_SRV_PTR, sizeof(struct rnd_access_buffer));
     buffers->srv_cli = create_shared_memory(STR_SHM_SRV_CLI_PTR, sizeof(struct circular_buffer));
-    buffers->main_cli->buffer = create_shared_memory(STR_SHM_MAIN_CLI_BUFFER, data->buffers_size*sizeof(struct pair));
+    
+    buffers->main_cli->elems = create_shared_memory(STR_SHM_MAIN_CLI_BUFFER, data->buffers_size*sizeof(struct operation)+data->buffers_size*sizeof(int));
+    buffers->main_cli->flags = buffers->main_cli->elems + data->buffers_size*sizeof(struct operation);
+
     buffers->cli_prx->elems = create_shared_memory(STR_SHM_CLI_PRX_BUFFER, data->buffers_size*sizeof(struct operation));
-    buffers->prx_srv->buffer = create_shared_memory(STR_SHM_PRX_SRV_BUFFER, data->buffers_size*sizeof(struct pair));
+    
+    buffers->prx_srv->elems = create_shared_memory(STR_SHM_PRX_SRV_BUFFER, data->buffers_size*sizeof(struct operation)+data->buffers_size*sizeof(int));
+    buffers->prx_srv->flags = buffers->prx_srv->elems + data->buffers_size*sizeof(struct operation);
+
     buffers->srv_cli->elems = create_shared_memory(STR_SHM_SRV_CLI_BUFFER, data->buffers_size*sizeof(struct operation));
 }
 
@@ -196,9 +202,9 @@ void destroy_dynamic_memory_buffers(struct main_data* data){
 }
 
 void destroy_shared_memory_buffers(struct main_data* data, struct communication_buffers* buffers){
- destroy_shared_memory(STR_SHM_MAIN_CLI_BUFFER,buffers->main_cli->buffer,data->buffers_size*sizeof(struct pair));
+ destroy_shared_memory(STR_SHM_MAIN_CLI_BUFFER,buffers->main_cli->elems,data->buffers_size*sizeof(struct operation));
  destroy_shared_memory(STR_SHM_CLI_PRX_BUFFER,buffers->cli_prx->elems,data->buffers_size*sizeof(struct operation));
- destroy_shared_memory(STR_SHM_PRX_SRV_BUFFER,buffers->prx_srv->buffer,data->buffers_size*sizeof(struct pair));
+ destroy_shared_memory(STR_SHM_PRX_SRV_BUFFER,buffers->prx_srv->elems,data->buffers_size*sizeof(struct operation));
  destroy_shared_memory(STR_SHM_SRV_CLI_BUFFER,buffers->srv_cli->elems,data->buffers_size*sizeof(struct operation));
  
  
