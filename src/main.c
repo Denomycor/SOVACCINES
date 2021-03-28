@@ -24,6 +24,22 @@ void create_shared_memory_buffers(struct main_data* data, struct communication_b
 
 }
 
+void create_semaphores(struct main_data* data, struct semaphores* sems){
+ *(sems->main_cli->full) = semaphore_create("sem_main_cli_full",0);
+ *(sems->main_cli->empty) = semaphore_create("sem_main_cli_empty",*(data->buffers_size));
+ *(sems->main_cli->mutex) = semaphore_create("sem_main_cli_mutex",1);
+ *(sems->cli_prx->full) = semaphore_create("sem_cli_prx_full",0);
+ *(sems->cli_prx->empty) = semaphore_create("sem_cli_prx_empty",*(data->buffers_size));
+ *(sems->cli_prx->mutex) = semaphore_create("sem_cli_prx_mutex",1);
+ *(sems->prx_srv->full) = semaphore_create("sem_prx_srv_full",0);
+ *(sems->prx_srv->empty) = semaphore_create("sem_prx_srv_empty",*(data->buffers_size));
+ *(sems->prx_srv->mutex) = semaphore_create("sem_prx_srv_mutex",1);
+ *(sems->srv_cli->full) = semaphore_create("sem_srv_cli_full",0);
+ *(sems->srv_cli->empty) = semaphore_create("sem_srv_cli_empty",*(data->buffers_size));
+ *(sems->srv_cli->mutex) = semaphore_create("sem_srv_cli_mutex",1);
+ *(sems->results_mutex) = semaphore_create("sem_results_mutex",1)
+}
+
 void launch_processes(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems) {
 
     /*Clientes*/
