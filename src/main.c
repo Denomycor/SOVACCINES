@@ -12,10 +12,6 @@ Miguel Santos, fc54461
 #include <string.h>
 
 
- #if 1
-    #define log(x) printf(x)
-    #endif
-
 void main_args(int argc, char* argv[], struct main_data* data) {
     data->max_ops = atoi(argv[1]);
     data->buffers_size = atoi(argv[2]);
@@ -157,7 +153,6 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
     *(data->terminate) = 1;
     wakeup_processes(data,sems);
     wait_processes(data);
-    log("ajnfsçd\n");
     write_statistics(data);
     destroy_semaphores(sems);
     destroy_shared_memory_buffers(data,buffers);
