@@ -1,4 +1,5 @@
 #include "../include/main.h"
+#include "../include/process.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -78,10 +79,11 @@ void launch_processes(struct communication_buffers* buffers, struct main_data* d
 void user_interaction(struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
     char* interacao;
     scanf("%s",interacao);
+    int nr_op=0; //DUVIDO Q SEJA ASSIM
 
     if(strcmp(interacao, "op")){
 
-        create_request(*(data->proxy_stats),buffers,data,sems);
+        create_request(nr_op,buffers,data,sems);
     }else if(strcmp(interacao, "read")) {
         read_answer(data,sems);
     }else if(strcmp(interacao, "stop")){
@@ -101,7 +103,7 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
      new_op.id =  *op_counter;
      produce_begin(sems->main_cli);
 
-     write_rnd_acess_buffer(buffers->main_cli,data->buffers_size,new_op);
+     write_rnd_access_buffer(buffers->main_cli,data->buffers_size,&new_op);
 
      produce_end(sems->main_cli);
      printf("Operation ID: %d \n", new_op.id);
@@ -142,40 +144,41 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
     destroy_dynamic_memory_buffers(data);
 }
 
+//REVER ESTA FUN
 void wakeup_processes(struct main_data* data, struct semaphores* sems) {
     /*Main*/
     produce_end(sems->main_cli);
     
     /*Clientes*/
     for(int i = 0; i < data->n_clients;i++) {
-        produce_end(sems->cli_prx[i]);
+        produce_end(sems->cli_prx);
     }
 
     /*Proxy*/
     for(int i = 0; i < data->n_proxies;i++) {
-        produce_end(sems->prx_srv[i]);
+        produce_end(sems->prx_srv);
     }
 
     /*Server*/
     for(int i = 0; i < data->n_servers;i++) {
-        produce_end(sems->srv_cli[i]);
+        produce_end(sems->srv_cli);
     }
 }
 
 void wait_processes(struct main_data* data) {
     /*Clientes*/
     for(int i = 0; i < data->n_clients;i++) {
-        wait_processes(data->client_pids[i]);
+        wait_process(data->client_pids[i]);
     }
 
     /*Proxy*/
     for(int i = 0; i < data->n_proxies;i++) {
-        wait_processes(data->proxy_pids[i]);
+        wait_process(data->proxy_pids[i]);
     }
 
     /*Server*/
     for(int i = 0; i < data->n_servers;i++) {
-        wait_processes(data->server_pids[i]);
+        wait_process(data->server_pids[i]);
     }
 }
 
