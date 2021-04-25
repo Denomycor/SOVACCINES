@@ -6,6 +6,7 @@ Miguel Santos, fc54461
 */
 
 #include "../include/proxy.h"
+#include "../include/sotime.h"
 
 
 int execute_proxy(int proxy_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
@@ -37,6 +38,7 @@ void proxy_receive_operation(struct operation* op, struct communication_buffers*
 }
 
 void proxy_process_operation(struct operation* op, int proxy_id, int* counter){
+ getTime(&op->proxy_time); //get time for when proxy proccess this op
  op->proxy = proxy_id;
  op->status = 'P';
  (*counter)++;

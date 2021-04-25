@@ -7,6 +7,7 @@ Miguel Santos, fc54461
 
 #include "../include/client.h"
 #include <stdio.h>
+#include "../include/sotime.h"
 
 int execute_client(int client_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){
@@ -40,6 +41,7 @@ void client_get_operation(struct operation* op, struct communication_buffers* bu
 }
 
 void client_process_operation(struct operation* op, int cient_id, int* counter){
+ getTime(&op->client_time); //get time for when client proccess this op
  op->client = cient_id;
  op->status = 'C';
  (*counter)++;
@@ -67,6 +69,7 @@ void client_process_answer(struct operation* op, struct main_data* data, struct 
  
  data->results[data->results->id] = *op;  //guarda operacao finalizada ao data
  (data->results->id)++;                   //incrementa-se o id do results para que se possa processar uma nova op
+ getTime(&op->end_time);                  //get time for when op was finished
 
  semaphore_mutex_unlock(sems->results_mutex);
  printf("operation ended\n");

@@ -6,6 +6,7 @@ Miguel Santos, fc54461
 */
 
 #include "../include/server.h"
+#include "../include/sotime.h"
 
 int execute_server(int server_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){
@@ -36,6 +37,7 @@ void server_receive_operation(struct operation* op, struct communication_buffers
 }
 
 void server_process_operation(struct operation* op, int server_id, int* counter){
+ getTime(&op->server_time); //get time for when server proccess this op
  op->server = server_id;
  op->status = 'S';
  (*counter)++;

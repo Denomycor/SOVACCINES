@@ -7,18 +7,38 @@ Miguel Santos, fc54461
 
 #include "../include/main.h"
 #include "../include/process.h"
+#include "../include/configuration.h"
+#include "../include/sotime.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
-void main_args(int argc, char* argv[], struct main_data* data) {
-    data->max_ops = atoi(argv[1]);
-    data->buffers_size = atoi(argv[2]);
-    data->n_clients = atoi(argv[3]);
-    data->n_proxies = atoi(argv[4]);
-    data->n_servers = atoi(argv[5]);
 
+void main_args(int argc, char* argv[], struct main_data* data) {
+
+    FILE* input = openFile(argv[1], "r");
+
+    readNumber(input, &data->max_ops);
+    readNumber(input, &data->buffers_size);
+    readNumber(input, &data->n_clients);
+    readNumber(input, &data->n_proxies);
+    readNumber(input, &data->n_servers);
+    
+    char reader[100]; //used as a temporary writing buffer for file reading ops
+    
+    readLine(input, reader);
+    data->log_filename = create_dynamic_memory(strlen(reader)+1); //+1 for the null termination character
+    strncpy(data->log_filename, reader, strlen(reader)+1);
+
+    readLine(input, reader);
+    data->statistics_filename = create_dynamic_memory(strlen(reader)+1); //+1 for the null termination character
+    strncpy(data->statistics_filename, reader, strlen(reader)+1);
+
+    readNumber(input, &data->alarm_time);
+
+
+    closeFile(input);
 }
 
 
@@ -115,6 +135,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 void create_request(int* op_counter, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){ 
  if(*op_counter < data->max_ops){
      struct operation new_op;
+     getTime(&new_op.start_time); //get time for when request was made
      new_op.id =  *op_counter;
      produce_begin(sems->main_cli);
 
@@ -213,6 +234,8 @@ void destroy_dynamic_memory_buffers(struct main_data* data){
  destroy_dynamic_memory(data->proxy_stats);
  destroy_dynamic_memory(data->server_stats);
 
+ destroy_dynamic_memory(data->log_filename);
+ destroy_dynamic_memory(data->statistics_filename);
 }
 
 void destroy_shared_memory_buffers(struct main_data* data, struct communication_buffers* buffers){

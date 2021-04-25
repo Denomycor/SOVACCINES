@@ -23,6 +23,13 @@ struct operation {
 	int client;		//id do cliente que a recebeu
 	int proxy; 		//id do proxy que a encaminhou
 	int server;		//id do server que a serviu
+
+
+	struct timespec start_time;
+	struct timespec client_time;
+	struct timespec proxy_time;
+	struct timespec server_time;
+	struct timespec end_time;
 };
 
 

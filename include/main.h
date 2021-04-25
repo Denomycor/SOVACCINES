@@ -13,6 +13,10 @@ struct main_data {
 	int n_proxies;		//número de proxies
 	int n_servers;		//número de servidores
 	
+	char* log_filename; //nome do ficheiro de log
+	char* statistics_filename; //nome do ficheiro de stats
+	int alarm_time;	//temporização para o alarme
+
 	int *client_pids;	//process ids de clientes
 	int *proxy_pids;	//process ids de proxies
 	int *server_pids;	//process ids de servidores
