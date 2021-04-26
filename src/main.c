@@ -9,6 +9,7 @@ Miguel Santos, fc54461
 #include "../include/process.h"
 #include "../include/configuration.h"
 #include "../include/sotime.h"
+#include "../include/log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,7 +50,7 @@ void create_dynamic_memory_buffers(struct main_data* data) {
     data->client_stats = create_dynamic_memory(sizeof(int));
     data->proxy_stats = create_dynamic_memory(sizeof(int));
     data->server_stats = create_dynamic_memory(sizeof(int));
-
+    
 }
 
 void create_shared_memory_buffers(struct main_data* data, struct communication_buffers* buffers) {
@@ -113,6 +114,7 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
     while (1){
         char* interacao;
         scanf("%s",interacao);
+        log(data->log_filename, interacao);
 
         if(strcmp(interacao, "op")==0){
             create_request(&nr_op,buffers,data,sems);

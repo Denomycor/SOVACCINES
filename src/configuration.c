@@ -30,6 +30,7 @@ void readNumber(FILE* file, int* mem){
 }
 
 
+
 //int fputs(char* line, FILE* file) escreve line para file
 //int fputs(char* line, int max, File* file) le no maximo max- caracteres de file para line
 //int fscanf(...)

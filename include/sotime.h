@@ -5,7 +5,7 @@
 
 void getTime(struct timespec* clock);
 
-
+void getFormatedTime(struct tm* t, long* nsec);
 
 
 #endif
