@@ -10,8 +10,10 @@ Miguel Santos, fc54461
 #include "../include/configuration.h"
 #include "../include/sotime.h"
 #include "../include/log.h"
+#include "../include/sosignal.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <string.h>
 
 
@@ -39,6 +41,7 @@ void main_args(int argc, char* argv[], struct main_data* data) {
     readNumber(input, &data->alarm_time);
 
     closeFile(input);
+    alarm(*data->alarm_time);
 }
 
 
@@ -271,7 +274,7 @@ void destroy_semaphores(struct semaphores* sems){
 }
 
 
-int main(int argc, char** argv){
+int main(int argc, char** argv){                 
     //init data structures
     struct main_data* data = create_dynamic_memory(sizeof(struct main_data));
     struct communication_buffers* buffers = create_dynamic_memory(sizeof(struct communication_buffers));
@@ -285,6 +288,8 @@ int main(int argc, char** argv){
     sems->prx_srv = create_dynamic_memory(sizeof(struct prodcons));
     sems->srv_cli = create_dynamic_memory(sizeof(struct prodcons));
     //execute main code
+    signal(SIGINT,sig_handler);
+    signal(SIGALRM,sinal_horario(*data->alarm_time));
     main_args(argc, argv, data);
     create_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, buffers);
