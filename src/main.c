@@ -38,7 +38,6 @@ void main_args(int argc, char* argv[], struct main_data* data) {
 
     readNumber(input, &data->alarm_time);
 
-
     closeFile(input);
 }
 

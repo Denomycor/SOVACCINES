@@ -1,3 +1,7 @@
+#ifndef SOSIGNAL_H
+#define SOSIGNAL_H
+
+
 /**
 Grupo054
 Afonso Esteves, fc54394
@@ -11,3 +15,4 @@ void sighandler(int signum,struct main_data* data, struct communication_buffers*
 
 void sinal_horario(int alarm_time);
 
+#endif
