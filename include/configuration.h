@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-FILE* openFile(char* name, char* mode);
+FILE* openFile(const char* name, const char* mode);
 
 int closeFile(FILE* file);
 

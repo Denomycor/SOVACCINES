@@ -8,7 +8,7 @@ void getTime(struct timespec* clock){
 
 void getFormatedTime(struct tm* t, long* nsec){
     struct timespec tf;
-    getTime(tf);
+    getTime(&tf);
     *nsec = tf.tv_nsec;
     localtime_r(&tf.tv_sec, t);
 }

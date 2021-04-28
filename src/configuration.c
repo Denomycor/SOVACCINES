@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-FILE* openFile(char* name, char* mode){
+FILE* openFile(const char* name, const char* mode){
     FILE* res = fopen(name, mode);
     if(res==NULL){
         perror("Couldnt find/open the file");

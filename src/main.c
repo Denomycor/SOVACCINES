@@ -114,22 +114,28 @@ void user_interaction(struct communication_buffers* buffers, struct main_data* d
 
     int nr_op=0;
     while (1){
-        char* interacao;
+        char interacao[20];
         scanf("%s",interacao);
-        log(data->log_filename, interacao);
 
         if(strcmp(interacao, "op")==0){
+            logT(data->log_filename, interacao, NULL);
             create_request(&nr_op,buffers,data,sems);
+
         }else if(strcmp(interacao, "read")==0) {
             read_answer(data,sems);
+
         }else if(strcmp(interacao, "stop")==0){
+            logT(data->log_filename, interacao, NULL);
             stop_execution(data,buffers,sems);
-            return;
+            
         }else if(strcmp(interacao, "help")==0){
+            logT(data->log_filename, interacao, NULL);
             printf("The op option creates a new operation\n");
             printf("The read option checks the status of the operation\n");
             printf("The stop option ends the program\n");
+
         }else{
+            logT(data->log_filename, interacao, NULL);
             perror("There is no interaction with that name\n");
         }
     }
@@ -154,6 +160,7 @@ void create_request(int* op_counter, struct communication_buffers* buffers, stru
 void read_answer(struct main_data* data, struct semaphores* sems){
     int id;
     scanf("%d", &id);
+    logT(data->log_filename, "read ", &id);
     semaphore_mutex_lock(sems->results_mutex);
     for(int i=0; i<data->max_ops; i++){
         struct operation* holder = data->results+i;
@@ -288,8 +295,10 @@ int main(int argc, char** argv){
     sems->prx_srv = create_dynamic_memory(sizeof(struct prodcons));
     sems->srv_cli = create_dynamic_memory(sizeof(struct prodcons));
     //execute main code
+
     signal(SIGINT,sig_handler);
     signal(SIGALRM,sinal_horario(*data->alarm_time));
+
     main_args(argc, argv, data);
     create_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, buffers);
