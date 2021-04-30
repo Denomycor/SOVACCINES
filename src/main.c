@@ -297,7 +297,7 @@ int main(int argc, char** argv){
     //execute main code
 
     signal(SIGINT,sig_handler);
-    signal(SIGALRM,sinal_horario(*data->alarm_time));
+    signal(SIGALRM,sinal_horario(*data->alarm_time,data));
 
     main_args(argc, argv, data);
     create_dynamic_memory_buffers(data);
