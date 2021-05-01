@@ -46,3 +46,25 @@ void writeIds(FILE *stream,struct operation* op,int i) {
     fputs(&proxyId,stream);
     fputs(&serverId,stream);
 }
+
+void writeLocalsTime(FILE *stream,struct operation* op,int i) {
+    char* createdTime;
+    char* clientTime;
+    char* proxyTime;
+    char* serverTime; 
+    char* ended;
+    char* totalTime;
+    asprintf(&createdTime,"Created:%s\n",ctime(op[i]->start_time->tv_sec));
+    asprintf(&clientTime,"Client_time:%s\n",ctime(op[i]->client_time->tv_sec));
+    asprintf(&proxyTime,"Porxy_time:%s\n",ctime(op[i]->proxy_time->tv_sec));
+    asprintf(&serverTime,"Server_time:%s\n",ctime(op[i]->server_time->tv_sec));
+    asprintf(&ended,"Ended:%s\n",ctime(op[i]->end_time->tv_sec));
+    asprintf(&totalTime,"Total Time:%s\n",ctime(op[i]->end_time->tv_sec - op[i]->start_time->tv_sec));
+    fputs(&createdTime,stream);
+    fputs(&clientTime,stream);
+    fputs(&proxyTime,stream);
+    fputs(&serverTime,stream);
+    fputs(&ended,stream);
+    fputs(&totalTime,stream);
+
+}
