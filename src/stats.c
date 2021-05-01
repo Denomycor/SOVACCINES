@@ -30,8 +30,12 @@ void writeProcessStats(FILE *stream,struct main_data* data) {
     }
 }
 
-void writeOpStatistics(FILE *stream,struct operation* op) {
-    for(int i = 0; i < ;i++) {
+void writeOpStatistics(FILE *stream,struct operation* op,struct main_data* data) {
+    int nr_processed = 0;
+     for(int i = 0; i< data->n_servers; i++) {
+        nr_processed += data->server_stats[i];
+    }
+    for(int i = 0; i < nr_processed;i++) {
         writeNumberOp(stream,op,i);
         writeStatus(stream,op,i);
         writeIds(stream,op,i);
