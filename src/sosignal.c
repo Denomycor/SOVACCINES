@@ -42,9 +42,14 @@ void sighandler(int signum) {
 void sinal_horario() {
 
     signal(SIGALRM, sinal_horario);
+    int nr_processed;
+
+    for(int i = 0; i< sizeof(int)*g_data->n_servers; i++) {
+        nr_processed += *g_data->server_stats[i];
+    }
 
     for(int i = 0; i < g_data->max_ops; i++){
-        if(i<server_stats) {
+        if(i<nr_processed) {
             printf("op:%d status:%s start:%d client:%d"
                     "client_time:%d proxy:%d proxy_time:%d"
                     "server:%d server_time:%d end:%d",
