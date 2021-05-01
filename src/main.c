@@ -17,7 +17,7 @@ Miguel Santos, fc54461
 #include <string.h>
 #include <sys/time.h>
 
-
+//global vars
 struct main_data* g_data;
 struct communication_buffers* g_buffers;
 struct semaphores* g_sems;
@@ -297,8 +297,8 @@ int main(int argc, char** argv){
     sems->cli_prx = create_dynamic_memory(sizeof(struct prodcons));
     sems->prx_srv = create_dynamic_memory(sizeof(struct prodcons));
     sems->srv_cli = create_dynamic_memory(sizeof(struct prodcons));
-    alarm(data->alarm_time);
     
+    //set global vars
     g_data = data;
     g_buffers = buffers;
     g_sems = sems;

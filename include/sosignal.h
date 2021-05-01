@@ -12,6 +12,6 @@ Miguel Santos, fc54461
 
 void sighandler(int signum);
 
-void sinal_horario(int alarm_time);
+void sinal_horario();
 
 #endif

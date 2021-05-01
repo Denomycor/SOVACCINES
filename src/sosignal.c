@@ -39,7 +39,7 @@ void sighandler(int signum) {
 
 
 //alarm
-void sinal_horario(int alarm_time) {
+void sinal_horario() {
 
     signal(SIGALRM, sinal_horario);
 
