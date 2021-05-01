@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void writeStatisticsFile(FILE *stream,struct main_data* data,int i){
-    writeProcessStats(stream,data,i);
+    writeProcessStats(stream,data);
     writeNumberOP(stream,data->op[i],i);
     writeStatus(stream,data->op[i],i);
     writeIds(stream,data->op[i],i);
@@ -10,17 +10,27 @@ void writeStatisticsFile(FILE *stream,struct main_data* data,int i){
 
 }
 
-void writeProcessStats(FILE *stream,struct main_data* data, int i) {
+void writeProcessStats(FILE *stream,struct main_data* data) {
     fputs("Process Statistics:\n",stream);
-    char* client;
-    char* proxy;
-    char* server;
-    asprintf(&client,"Client %d received %d requests\n",data->client_pids[i],data->client_stats[i]);
-    asprintf(&proxy,"Client %d received %d requests\n",data->proxy_pids[i],data->proxy_stats[i]);
-    asprintf(&server,"Client %d received %d requests\n",data->server_pids[i],data->server_stats[i]);
-    fputs(&client,stream);
-    fputs(&proxy,stream);
-    fputs(&server,stream);
+    for(int i = 0; i < data ->n_clients,i++) {
+        char* client;
+        asprintf(&client,"Client %d received %d requests\n",
+                data->client_pids[i],  
+                data->client_stats[i]);
+        fputs(&client,stream);
+    }
+    
+    for(int i = 0; i < data ->n_proxies,i++) {
+        char* proxy;
+        asprintf(&proxy,"Proxy %d received %d requests\n",data->proxy_pids[i],data->proxy_stats[i]);
+        fputs(&proxy,stream);
+    }
+
+    for(int i = 0; i < data ->n_servers,i++) {
+        char* server;
+        asprintf(&server,"Server %d received %d requests\n",data->server_pids[i],data->server_stats[i]);
+        fputs(&server,stream);
+    }
 }
 
 void writeNumberOp(FILE *stream,struct operation* op,int i) {
