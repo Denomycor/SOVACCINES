@@ -15,8 +15,12 @@ Miguel Santos, fc54461
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/time.h>
 
 
+struct main_data* g_data;
+struct communication_buffers* g_buffers;
+struct semaphores* g_sems;
 
 void main_args(int argc, char* argv[], struct main_data* data) {
 
@@ -41,7 +45,6 @@ void main_args(int argc, char* argv[], struct main_data* data) {
     readNumber(input, &data->alarm_time);
 
     closeFile(input);
-    alarm(*data->alarm_time);
 }
 
 
@@ -294,11 +297,25 @@ int main(int argc, char** argv){
     sems->cli_prx = create_dynamic_memory(sizeof(struct prodcons));
     sems->prx_srv = create_dynamic_memory(sizeof(struct prodcons));
     sems->srv_cli = create_dynamic_memory(sizeof(struct prodcons));
+    alarm(data->alarm_time);
+    
+    g_data = data;
+    g_buffers = buffers;
+    g_sems = sems;
+    
+    //Prepare signals
+    signal(SIGINT, sighandler); //set the behavior of SIGINT to sighandler
+    
+    struct itimerval val;
+    signal(SIGALRM, sinal_horario);
+    val.it_interval.tv_sec = data->alarm_time;
+    val.it_interval.tv_usec = 0;
+    val.it_value.tv_sec = data->alarm_time;
+    val.it_value.tv_usec = 0;
+    setitimer(ITIMER_REAL, &val, NULL);
+
+
     //execute main code
-
-    signal(SIGINT,sig_handler);
-    signal(SIGALRM,sinal_horario(*data->alarm_time,data));
-
     main_args(argc, argv, data);
     create_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, buffers);

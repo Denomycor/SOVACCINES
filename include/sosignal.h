@@ -10,8 +10,8 @@ Miguel Santos, fc54461
 
 #include <signal.h>
 
-void sighandler(int signum,struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems);
+void sighandler(int signum);
 
-void sinal_horario(int alarm_time,struct main_data* data);
+void sinal_horario(int alarm_time);
 
 #endif
