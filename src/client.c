@@ -16,7 +16,13 @@ int execute_client(int client_id, struct communication_buffers* buffers, struct 
     client_get_operation(op,buffers,data,sems);
     
     if((op->id) != -1 && *(data->terminate) == 0){
-        client_process_operation(op,client_id,data->client_stats);
+        int j=0;
+        for(; j<data->n_clients;j++){
+            if(data->client_pids[j] == getpid()){
+                break;
+            }
+        }
+        client_process_operation(op,client_id,data->client_stats+j);
         client_send_operation(op,buffers,data,sems);
     }
 
