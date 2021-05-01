@@ -52,9 +52,9 @@ void create_dynamic_memory_buffers(struct main_data* data) {
     data->client_pids = create_dynamic_memory(data->n_clients*sizeof(int));
     data->proxy_pids = create_dynamic_memory(data->n_proxies*sizeof(int));
     data->server_pids = create_dynamic_memory(data->n_servers*sizeof(int));
-    data->client_stats = create_dynamic_memory(sizeof(int));
-    data->proxy_stats = create_dynamic_memory(sizeof(int));
-    data->server_stats = create_dynamic_memory(sizeof(int));
+    data->client_stats = create_dynamic_memory(sizeof(int)*data->n_clients);
+    data->proxy_stats = create_dynamic_memory(sizeof(int)*data->n_proxies);
+    data->server_stats = create_dynamic_memory(sizeof(int)*data->n_servers);
     
 }
 
