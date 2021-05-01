@@ -1,13 +1,10 @@
 #include "stats.h"
 #include <stdio.h>
+#include <time.h>
 
-void writeStatisticsFile(FILE *stream,struct main_data* data,int i){
+void writeStatisticsFile(FILE *stream,struct main_data* data){
     writeProcessStats(stream,data);
-    writeNumberOP(stream,data->op[i],i);
-    writeStatus(stream,data->op[i],i);
-    writeIds(stream,data->op[i],i);
-    writeLocalsTime(stream,data->op[i],i);
-
+    writeOpStatistics(FILE *stream,data -> results);
 }
 
 void writeProcessStats(FILE *stream,struct main_data* data) {
@@ -33,6 +30,14 @@ void writeProcessStats(FILE *stream,struct main_data* data) {
     }
 }
 
+void writeOpStatistics(FILE *stream,struct operation* op) {
+    for(int i = 0; i < ;i++) {
+        writeNumberOp(stream,op,i);
+        writeStatus(stream,op,i);
+        writeIds(stream,op,i);
+        writeLocalsTime(stream,op,i);
+    }
+}
 void writeNumberOp(FILE *stream,struct operation* op,int i) {
     char* opStr;
     asprintf(&opStr,"OP:%d\n",op[i]->id);
@@ -76,5 +81,6 @@ void writeLocalsTime(FILE *stream,struct operation* op,int i) {
     fputs(&serverTime,stream);
     fputs(&ended,stream);
     fputs(&totalTime,stream);
+    fputs("\n",stream);
 
 }
