@@ -1,12 +1,12 @@
 #include <time.h>
 #include <stdio.h>
-#include "main.h"
+#include "../include/main.h"
 
 void writeStatisticsFile(FILE *stream,struct main_data* data);
 
 void writeProcessStats(FILE *stream,struct main_data* data);
 
-void writeOpStatistics(FILE *stream,struct operation* op);
+void writeOpStatistics(FILE *stream,struct operation* op,struct main_data* data);
 
 void writeNumberOp(FILE *stream,struct operation* op,int i);
 
