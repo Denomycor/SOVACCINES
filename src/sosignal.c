@@ -44,8 +44,8 @@ void sinal_horario() {
     signal(SIGALRM, sinal_horario);
     int nr_processed;
 
-    for(int i = 0; i< sizeof(int)*g_data->n_servers; i++) {
-        nr_processed += *g_data->server_stats[i];
+    for(int i = 0; i< g_data->n_servers; i++) {
+        nr_processed += g_data->server_stats[i];
     }
 
     for(int i = 0; i < g_data->max_ops; i++){
