@@ -42,7 +42,7 @@ void sighandler(int signum) {
 void sinal_horario() {
 
     signal(SIGALRM, sinal_horario);
-    int nr_processed;
+    int nr_processed = 0;
 
     for(int i = 0; i< g_data->n_servers; i++) {
         nr_processed += g_data->server_stats[i];
