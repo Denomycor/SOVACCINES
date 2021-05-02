@@ -12,18 +12,18 @@ Miguel Santos, fc54461
 int execute_server(int server_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){
 
-    struct operation* op;
-    server_receive_operation(op,buffers,data,sems);
+    struct operation op;
+    server_receive_operation(&op,buffers,data,sems);
 
-    if((op->id) != -1 && *(data->terminate) == 0){
+    if((op.id) != -1 && *(data->terminate) == 0){
         int j=0;
         for(; j<data->n_servers;j++){
             if(data->server_pids[j] == getpid()){
                 break;
             }
         }
-        server_process_operation(op,server_id,data->server_stats+j);
-        server_send_answer(op,buffers,data,sems);
+        server_process_operation(&op,server_id,data->server_stats+j);
+        server_send_answer(&op,buffers,data,sems);
     }
 
     if(*(data->terminate) == 1){

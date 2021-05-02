@@ -13,18 +13,18 @@ Miguel Santos, fc54461
 int execute_proxy(int proxy_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){
 
-    struct operation* op;
-    proxy_receive_operation(op,buffers,data,sems);
+    struct operation op;
+    proxy_receive_operation(&op,buffers,data,sems);
 
-    if((op->id) != -1 && *(data->terminate) == 0){
+    if((op.id) != -1 && *(data->terminate) == 0){
         int j=0;
         for(; j<data->n_proxies;j++){
             if(data->proxy_pids[j] == getpid()){
                 break;
             }
         }
-        proxy_process_operation(op,proxy_id,data->proxy_stats+j);
-        proxy_forward_operation(op,buffers,data,sems);
+        proxy_process_operation(&op,proxy_id,data->proxy_stats+j);
+        proxy_forward_operation(&op,buffers,data,sems);
     }
 
     if(*(data->terminate) == 1){

@@ -279,7 +279,8 @@ void destroy_semaphores(struct semaphores* sems){
 }
 
 
-int main(int argc, char** argv){                 
+int main(int argc, char** argv){    
+
     //init data structures
     struct main_data* data = create_dynamic_memory(sizeof(struct main_data));
     struct communication_buffers* buffers = create_dynamic_memory(sizeof(struct communication_buffers));

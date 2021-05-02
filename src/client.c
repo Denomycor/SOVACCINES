@@ -13,23 +13,23 @@ Miguel Santos, fc54461
 int execute_client(int client_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){
 
-    struct operation* op;
-    client_get_operation(op,buffers,data,sems);
+    struct operation op;
+    client_get_operation(&op,buffers,data,sems);
     
-    if((op->id) != -1 && *(data->terminate) == 0){
+    if((op.id) != -1 && *(data->terminate) == 0){
         int j=0;
         for(; j<data->n_clients;j++){
             if(data->client_pids[j] == getpid()){
                 break;
             }
         }
-        client_process_operation(op,client_id,data->client_stats+j);
-        client_send_operation(op,buffers,data,sems);
+        client_process_operation(&op,client_id,data->client_stats+j);
+        client_send_operation(&op,buffers,data,sems);
     }
 
-    client_receive_answer(op,buffers,data,sems);
-    if((op->id) != -1 && *(data->terminate) == 0){
-        client_process_answer(op,data,sems);
+    client_receive_answer(&op,buffers,data,sems);
+    if((op.id) != -1 && *(data->terminate) == 0){
+        client_process_answer(&op,data,sems);
     }
 
     if(*(data->terminate) == 1) {
@@ -74,8 +74,11 @@ void client_receive_answer(struct operation* op, struct communication_buffers* b
 void client_process_answer(struct operation* op, struct main_data* data, struct semaphores* sems){
  semaphore_mutex_lock(sems->results_mutex);
  
- data->results[data->results->id] = *op;  //guarda operacao finalizada ao data
- (data->results->id)++;                   //incrementa-se o id do results para que se possa processar uma nova op
+ //data->results[data->results->id] = *op;  //guarda operacao finalizada ao data
+ //(data->results->id)++;                   //incrementa-se o id do results para que se possa processar uma nova op
+ printf("Operacao %d terminada", op->id);
+ data->results[op->id] = *op;
+
  getTime(&op->end_time);                  //get time for when op was finished
 
  semaphore_mutex_unlock(sems->results_mutex);
