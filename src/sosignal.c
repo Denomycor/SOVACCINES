@@ -8,6 +8,7 @@ Miguel Santos, fc54461
 #include "../include/main.h"
 #include "../include/sotime.h"
 #include "../include/sosignal.h"
+#include "../include/synchronization.h"
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
