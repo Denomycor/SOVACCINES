@@ -7,7 +7,7 @@
 #include <time.h>
 
 void writeStatisticsFile(const char* name,struct main_data* data){
-    FILE* stream = openFile(name, "a");
+    FILE* stream = openFile(name, "w");
     
     writeProcessStats(stream,data);
     writeOpStatistics(stream,data ->results,data);

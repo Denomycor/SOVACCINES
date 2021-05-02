@@ -292,7 +292,7 @@ int main(int argc, char** argv){
     sems->cli_prx = create_dynamic_memory(sizeof(struct prodcons));
     sems->prx_srv = create_dynamic_memory(sizeof(struct prodcons));
     sems->srv_cli = create_dynamic_memory(sizeof(struct prodcons));
-    
+
     //set global vars
     g_data = data;
     g_buffers = buffers;
@@ -312,6 +312,11 @@ int main(int argc, char** argv){
 
     //execute main code
     main_args(argc, argv, data);
+
+    FILE* f = openFile(data->log_filename, "w");
+    fputs("", f);
+    closeFile(f);
+
     create_dynamic_memory_buffers(data);
     create_shared_memory_buffers(data, buffers);
     create_semaphores(data, sems);
