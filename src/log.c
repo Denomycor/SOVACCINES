@@ -13,7 +13,7 @@ void logTime(FILE* f){
 }
 
 void logT(const char* filename, const char* interacao, const int* arg){
-    FILE* file = openFile(filename, "w");
+    FILE* file = openFile(filename, "a");
     
     logTime(file);
     fputs(interacao, file);
