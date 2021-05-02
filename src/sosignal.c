@@ -54,6 +54,7 @@ void sinal_horario() {
 
     for(int i = 0; i < g_data->max_ops; i++){
         if(i<nr_processed) {
+            semaphore_mutex_lock(g_sems->results_mutex);
             printf("op:%d status:%c start:%lu client:%d"
                     "client_time:%lu proxy:%d proxy_time:%lu"
                     "server:%d server_time:%lu end:%lu",
@@ -67,6 +68,7 @@ void sinal_horario() {
                     g_data->results[i].server_time.tv_sec,
                     g_data->results[i].end_time.tv_sec
             );
+            semaphore_mutex_unlock(g_sems->results_mutex);
         }
         else {
             printf("op:%d status:0", i);
