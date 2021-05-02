@@ -187,9 +187,9 @@ void read_answer(struct main_data* data, struct semaphores* sems){
 
 void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems) {
     *(data->terminate) = 1;
-    writeStatisticsFile(data->statistics_filename, data);
     wakeup_processes(data,sems);
     wait_processes(data);
+    writeStatisticsFile(data->statistics_filename, data);
     destroy_semaphores(sems);
     destroy_shared_memory_buffers(data,buffers);
     destroy_dynamic_memory_buffers(data);
