@@ -25,7 +25,7 @@ stats.o = $(HEADERDIR)/stats.h $(HEADERDIR)/main.h $(HEADERDIR)/configuration.h 
 configuration.o = $(HEADERDIR)/configuration.h
 sotime.o = $(HEADERDIR)/sotime.h
 log.o = $(HEADERDIR)/log.h $(HEADERDIR)/sotime.h $(HEADERDIR)/configuration.h
-sosignal.o = $(HEADERDIR)/main.h $(HEADERDIR)/sotime.h $(HEADERDIR)/sosignal.h
+sosignal.o = $(HEADERDIR)/main.h $(HEADERDIR)/sotime.h $(HEADERDIR)/sosignal.h $(HEADERDIR)/synchronization.h
 
 
 sovaccines: $(OBJFILES)
