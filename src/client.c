@@ -6,8 +6,9 @@ Miguel Santos, fc54461
 */
 
 #include "../include/client.h"
-#include <stdio.h>
 #include "../include/sotime.h"
+#include <stdio.h>
+#include <unistd.h>
 
 int execute_client(int client_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){

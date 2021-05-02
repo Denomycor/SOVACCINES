@@ -7,6 +7,7 @@ Miguel Santos, fc54461
 
 #include "../include/proxy.h"
 #include "../include/sotime.h"
+#include <unistd.h>
 
 
 int execute_proxy(int proxy_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){

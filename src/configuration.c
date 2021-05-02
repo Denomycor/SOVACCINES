@@ -1,5 +1,6 @@
 #include "../include/configuration.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 
 FILE* openFile(const char* name, const char* mode){

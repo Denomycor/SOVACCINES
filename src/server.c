@@ -7,6 +7,7 @@ Miguel Santos, fc54461
 
 #include "../include/server.h"
 #include "../include/sotime.h"
+#include <unistd.h>
 
 int execute_server(int server_id, struct communication_buffers* buffers, struct main_data* data, struct semaphores* sems){
  while(1){

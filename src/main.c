@@ -190,7 +190,6 @@ void stop_execution(struct main_data* data, struct communication_buffers* buffer
     writeStatisticsFile(data->statistics_filename, data);
     wakeup_processes(data,sems);
     wait_processes(data);
-    write_statistics(data);
     destroy_semaphores(sems);
     destroy_shared_memory_buffers(data,buffers);
     destroy_dynamic_memory_buffers(data);
@@ -235,12 +234,6 @@ void wait_processes(struct main_data* data) {
     }
 }
 
-
-void write_statistics(struct main_data* data){
- printf("Operações processadas por cada cliente: %d \n",*(data->client_stats));
- printf("Operações processadas por cada proxy: %d \n",*(data->proxy_stats));
- printf("Operações processadas por cada servidor: %d \n",*(data->server_stats));
-}
 
 void destroy_dynamic_memory_buffers(struct main_data* data){
  destroy_dynamic_memory(data->client_pids);

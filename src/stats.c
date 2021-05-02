@@ -102,9 +102,13 @@ void writeLocalsTime(FILE* stream,struct operation* op,int i) {
 
     timespec_diff(&op[i].start_time, &op[i].end_time, &diff);
     fputs("\nTotal Time: ", stream);
-    fputs(diff.tv_sec, stream);
+
+    sprintf(temp, "%ld", diff.tv_sec);
+    fputs(temp, stream);
     fputs(".", stream);
-    fputs(diff.tv_nsec, stream);
+
+    sprintf(temp, "%ld", diff.tv_nsec);
+    fputs(temp, stream);
     fputs("\n", stream);  
 
 }

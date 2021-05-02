@@ -3,6 +3,15 @@
 #include "../include/configuration.h"
 #include <stdio.h>
 
+void logTime(FILE* f){
+    struct tm tf;
+    long nsec;
+    getFormatedTime(&tf, &nsec);
+    char temp[100];
+    logTimeFormated(f, temp, &tf, nsec);
+    fputs(" ", f);
+}
+
 void logT(const char* filename, const char* interacao, const int* arg){
     FILE* file = openFile(filename, "w");
     
@@ -27,11 +36,3 @@ void logTimeFormated(FILE* f, char* buffer, struct tm* time, long nsec){
     
 }
 
-void logTime(FILE* f){
-    struct tm tf;
-    long nsec;
-    getFormatedTime(&tf, &nsec);
-    char temp[100];
-    logTimeFormated(f, temp, &tf, nsec);
-    fputs(" ", f);
-}

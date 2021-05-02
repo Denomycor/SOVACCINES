@@ -11,7 +11,6 @@ HEADERDIR = include
 SRCDIRDIR = src
 BINDIR = bin
 
-#//Dar update aos  .o  seguintes caso tenham sido acrescentados includes nos seus  .c
 
 proxy.o = $(HEADERDIR)/main.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/proxy.h $(HEADERDIR)/memory.h $(HEADERDIR)/sotime.h	
 memory.o = $(HEADERDIR)/memory-private.h $(HEADERDIR)/memory.h
@@ -22,14 +21,11 @@ server.o = $(HEADERDIR)/main.h $(HEADERDIR)/server.h $(HEADERDIR)/synchronizatio
 		
 main.o =  $(HEADERDIR)/main.h $(HEADERDIR)/client.h $(HEADERDIR)/server.h $(HEADERDIR)/proxy.h $(HEADERDIR)/process.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h $(HEADERDIR)/memory-private.h $(HEADERDIR)/stats.h $(HEADERDIR)/configuration.h $(HEADERDIR)/sotime.h $(HEADERDIR)/log.h $(HEADERDIR)/sosignal.h
 
-
-#//Acrescentar os novos  .o  e escrever $(HEADERDIR)/xxxxxxxx.h para cada include que esteja no seu  .c  ou  .h (que tenha sido escrito por nos, ou seja #include "../include/xxxxx.h")
-
 stats.o = $(HEADERDIR)/stats.h $(HEADERDIR)/main.h $(HEADERDIR)/configuration.h $(HEADERDIR)/sotime.h $(HEADERDIR)/log.h
 configuration.o = $(HEADERDIR)/configuration.h
 sotime.o = $(HEADERDIR)/sotime.h
 log.o = $(HEADERDIR)/log.h $(HEADERDIR)/sotime.h $(HEADERDIR)/configuration.h
-sosignal.o = $(HEADERDIR)/main.h $(HEADERDIR)/sotime.h								#// Reparei que não tem sosignal.h no .c , é suposto ?
+sosignal.o = $(HEADERDIR)/main.h $(HEADERDIR)/sotime.h $(HEADERDIR)/sosignal.h
 
 
 sovaccines: $(OBJFILES)

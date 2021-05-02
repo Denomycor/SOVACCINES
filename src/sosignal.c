@@ -7,7 +7,10 @@ Miguel Santos, fc54461
 
 #include "../include/main.h"
 #include "../include/sotime.h"
+#include "../include/sosignal.h"
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 
@@ -50,18 +53,18 @@ void sinal_horario() {
 
     for(int i = 0; i < g_data->max_ops; i++){
         if(i<nr_processed) {
-            printf("op:%d status:%s start:%d client:%d"
-                    "client_time:%d proxy:%d proxy_time:%d"
-                    "server:%d server_time:%d end:%d",
+            printf("op:%d status:%c start:%lu client:%d"
+                    "client_time:%lu proxy:%d proxy_time:%lu"
+                    "server:%d server_time:%lu end:%lu",
                     i, g_data->results[i].status,
-                    g_data->results[i].start_time,
+                    g_data->results[i].start_time.tv_sec,
                     g_data->results[i].client,
-                    g_data->results[i].client_time,
+                    g_data->results[i].client_time.tv_sec,
                     g_data->results[i].proxy,
-                    g_data->results[i].proxy_time,
+                    g_data->results[i].proxy_time.tv_sec,
                     g_data->results[i].server,
-                    g_data->results[i].server_time,
-                    g_data->results[i].end_time
+                    g_data->results[i].server_time.tv_sec,
+                    g_data->results[i].end_time.tv_sec
             );
         }
         else {
