@@ -19,14 +19,19 @@ void logT(const char* filename, const char* interacao, const int* arg){
     closeFile(file);
 }
 
+void logTimeFormated(FILE* f, char* buffer, struct tm* time, long nsec){
+    strftime(buffer, 100, "%Y-%m-%d %H:%M:%S.", time);
+    fputs(buffer, f);
+    sprintf(buffer, "%ld", nsec);
+    fputs(buffer, f);
+    
+}
+
 void logTime(FILE* f){
     struct tm tf;
     long nsec;
     getFormatedTime(&tf, &nsec);
     char temp[100];
-    strftime(temp, 100, "%Y-%m-%d %H:%M:%S.", &tf);
-    fputs(temp, f);
-    sprintf(temp, "%ld", nsec);
-    fputs(temp, f);
+    logTimeFormated(f, temp, &tf, nsec);
     fputs(" ", f);
 }

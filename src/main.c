@@ -11,6 +11,7 @@ Miguel Santos, fc54461
 #include "../include/sotime.h"
 #include "../include/log.h"
 #include "../include/sosignal.h"
+#include "../include/stats.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -186,6 +187,7 @@ void read_answer(struct main_data* data, struct semaphores* sems){
 
 void stop_execution(struct main_data* data, struct communication_buffers* buffers, struct semaphores* sems) {
     *(data->terminate) = 1;
+    writeStatisticsFile(data->statistics_filename, data);
     wakeup_processes(data,sems);
     wait_processes(data);
     write_statistics(data);
@@ -219,7 +221,7 @@ void wakeup_processes(struct main_data* data, struct semaphores* sems) {
 void wait_processes(struct main_data* data) {
     /*Clientes*/
     for(int i = 0; i < data->n_clients;i++) {
-        wait_process(data->client_pids[i]);
+       wait_process(data->client_pids[i]);
     }
 
     /*Proxy*/
