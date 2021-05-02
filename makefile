@@ -13,23 +13,23 @@ BINDIR = bin
 
 #//Dar update aos  .o  seguintes caso tenham sido acrescentados includes nos seus  .c
 
-proxy.o = $(HEADERDIR)/main.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/proxy.h $(HEADERDIR)/memory.h
+proxy.o = $(HEADERDIR)/main.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/proxy.h $(HEADERDIR)/memory.h $(HEADERDIR)/sotime.h	
 memory.o = $(HEADERDIR)/memory-private.h $(HEADERDIR)/memory.h
 process.o = $(HEADERDIR)/client.h $(HEADERDIR)/main.h $(HEADERDIR)/memory.h $(HEADERDIR)/proxy.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/server.h 
 synchronization.o = $(HEADERDIR)/synchronization.h
-client.o = $(HEADERDIR)/client.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/main.h $(HEADERDIR)/memory.h
-server.o = $(HEADERDIR)/main.h $(HEADERDIR)/server.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h
-
-main.o =  $(HEADERDIR)/main.h $(HEADERDIR)/client.h $(HEADERDIR)/server.h $(HEADERDIR)/proxy.h $(HEADERDIR)/process.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h $(HEADERDIR)/memory-private.h
+client.o = $(HEADERDIR)/client.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/main.h $(HEADERDIR)/memory.h $(HEADERDIR)/sotime.h
+server.o = $(HEADERDIR)/main.h $(HEADERDIR)/server.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h $(HEADERDIR)/sotime.h
+		
+main.o =  $(HEADERDIR)/main.h $(HEADERDIR)/client.h $(HEADERDIR)/server.h $(HEADERDIR)/proxy.h $(HEADERDIR)/process.h $(HEADERDIR)/synchronization.h $(HEADERDIR)/memory.h $(HEADERDIR)/memory-private.h $(HEADERDIR)/stats.h $(HEADERDIR)/configuration.h $(HEADERDIR)/sotime.h $(HEADERDIR)/log.h $(HEADERDIR)/sosignal.h
 
 
 #//Acrescentar os novos  .o  e escrever $(HEADERDIR)/xxxxxxxx.h para cada include que esteja no seu  .c  ou  .h (que tenha sido escrito por nos, ou seja #include "../include/xxxxx.h")
 
-stats.o = 
-configuration.o = 
-sotime.o = 
-log.o = 
-sosignal.o = 
+stats.o = $(HEADERDIR)/stats.h $(HEADERDIR)/main.h $(HEADERDIR)/configuration.h $(HEADERDIR)/sotime.h $(HEADERDIR)/log.h
+configuration.o = $(HEADERDIR)/configuration.h
+sotime.o = $(HEADERDIR)/sotime.h
+log.o = $(HEADERDIR)/log.h $(HEADERDIR)/sotime.h $(HEADERDIR)/configuration.h
+sosignal.o = $(HEADERDIR)/main.h $(HEADERDIR)/sotime.h								#// Reparei que não tem sosignal.h no .c , é suposto ?
 
 
 sovaccines: $(OBJFILES)
